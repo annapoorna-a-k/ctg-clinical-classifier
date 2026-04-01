@@ -19,7 +19,7 @@ def load_model():
         st.info("Downloading deep learning model weights from Google Drive...")
         os.makedirs('models', exist_ok=True)
         # REPLACE THIS ID WITH YOUR GOOGLE DRIVE FILE ID!
-        file_id = '1YOUR_GOOGLE_DRIVE_FILE_ID_HERE' 
+        file_id = '1o6hEOLuEeQIK2HGURUP6ZOZmpaKIhdJB 
         url = f'https://drive.google.com/uc?id={file_id}'
         gdown.download(url, model_path, quiet=False)
         
