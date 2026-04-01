@@ -370,8 +370,14 @@ if uploaded_files and len(uploaded_files) >= 2:
 
                     # Model inference
                     fhr_w = np.nan_to_num(fhr_seg[-SEQ_LEN:], nan=0.0).astype(np.float32)
+                    
+                    # Apply global MinMaxScaler from training to FHR sequence
+                    # Data Min: ~50.0 BPM, Data Max: ~295.0 BPM -> Range: [-1, 1]
+                    fhr_norm = 2.0 * (fhr_w - 50.0) / (295.0 - 50.0) - 1.0
+                    fhr_norm = np.clip(fhr_norm, -1.0, 1.0).astype(np.float32)
+                    
                     img_input = np.expand_dims(sequence_to_image(fhr_w), axis=0)
-                    seq_input = np.expand_dims(fhr_w.reshape(SEQ_LEN, 1), axis=0)
+                    seq_input = np.expand_dims(fhr_norm.reshape(SEQ_LEN, 1), axis=0)
 
                     with st.spinner("Running ResNet50-Hybrid inference..."):
                         pred_prob  = float(model.predict([img_input, seq_input], verbose=0)[0][0])
