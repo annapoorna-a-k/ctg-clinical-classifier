@@ -2,6 +2,6 @@ streamlit
 numpy
 pandas
 scipy
-tensorflow-cpu~=2.15.0
+tensorflow-cpu
 wfdb
 gdown
