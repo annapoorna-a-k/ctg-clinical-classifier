@@ -70,13 +70,20 @@ if uploaded_files and len(uploaded_files) >= 2:
                         figo_class, figo_explanation = ctg_utils.figo_classify_and_explain(features)
                         
                         # 4. Model Inference (ResNet50 Hybrid)
-                        # Stack to shape (3600, 2) and add batch dim -> (1, 3600, 2)
-                        X = np.stack((fhr_seg, uc_seg), axis=-1)
-                        # Replace any remaining NaNs safely with 0.0 (baseline for Neural Networks)
-                        X = np.nan_to_num(X, nan=0.0) 
-                        X_input = X.reshape(1, 3600, 2)
+                        # Extract the last 600 timesteps (10 minutes) for the model
+                        fhr_600 = fhr_seg[-600:]
+                        uc_600 = uc_seg[-600:]
                         
-                        pred_prob = model.predict(X_input)[0][0]
+                        # Generate Image branch input
+                        img_input = ctg_utils.window_to_image(fhr_600, uc_600)
+                        img_input = np.expand_dims(img_input, axis=0) # (1, 224, 224, 3)
+                        
+                        # Generate Sequence branch input (600, 2)
+                        seq_input = np.stack((fhr_600, uc_600), axis=-1)
+                        seq_input = np.nan_to_num(seq_input, nan=0.0) 
+                        seq_input = np.expand_dims(seq_input, axis=0) # (1, 600, 2)
+                        
+                        pred_prob = model.predict([img_input, seq_input])[0][0]
                         pred_class = "Abnormal / Pathologic" if pred_prob > 0.5 else "Normal"
                         
                         # 5. Show Beautiful Output

@@ -5,3 +5,5 @@ scipy
 tensorflow-cpu
 wfdb
 gdown
+matplotlib
+Pillow

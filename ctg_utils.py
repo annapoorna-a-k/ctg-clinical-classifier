@@ -2,8 +2,29 @@ import numpy as np
 import pandas as pd
 import wfdb
 from scipy.signal import find_peaks
+import matplotlib.pyplot as plt
+from PIL import Image as PILImage
 import warnings
 warnings.filterwarnings('ignore')
+
+IMG_SIZE = 224
+
+def window_to_image(fhr_w, uc_w):
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(2.24, 2.24), dpi=100)
+    fig.patch.set_facecolor('white')
+    ax1.plot(fhr_w, color='blue', linewidth=0.8)
+    ax1.axis('off')
+    ax2.plot(uc_w,  color='red',  linewidth=0.8)
+    ax2.axis('off')
+    plt.tight_layout(pad=0)
+    fig.canvas.draw()
+
+    buf = np.asarray(fig.canvas.buffer_rgba())  # RGBA
+    img = buf[:, :, :3]                         # RGB
+    plt.close(fig)
+
+    img = PILImage.fromarray(img).resize((IMG_SIZE, IMG_SIZE))
+    return np.array(img, dtype=np.float32) / 255.0
 
 def prepare_signal_from_record(record_path):
     """
