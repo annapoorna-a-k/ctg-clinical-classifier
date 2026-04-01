@@ -24,85 +24,93 @@ st.markdown("""
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
+    color: #1e293b;
 }
 
-/* Page background */
+/* Base Streamlit overriding */
 .stApp {
-    background-color: #0a0f1e;
-    color: #e2e8f0;
+    background-color: #f4f6f9;
 }
 
 /* Top header band */
 .header-band {
-    background: linear-gradient(135deg, #0d1b2a 0%, #1a2e4a 50%, #0d2137 100%);
-    border-bottom: 1px solid #1e3a5f;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-bottom: 3px solid #005b96;
     padding: 2.5rem 3rem 2rem 3rem;
     margin: -1rem -1rem 2rem -1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 .header-band h1 {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    color: #e2f0ff;
+    letter-spacing: 0.02em;
+    color: #004b7c;
     margin: 0 0 0.4rem 0;
-    text-transform: uppercase;
 }
 .header-band .subtitle {
-    font-size: 0.85rem;
-    color: #7fafd4;
-    letter-spacing: 0.06em;
-    font-weight: 400;
+    font-size: 0.95rem;
+    color: #475569;
+    letter-spacing: 0.03em;
+    font-weight: 500;
     text-transform: uppercase;
 }
 
 /* Info section */
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 .info-card {
-    background: #0d1b2a;
-    border: 1px solid #1e3a5f;
-    border-left: 3px solid #2d7dd2;
-    border-radius: 4px;
-    padding: 1.2rem 1.4rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #005b96;
+    border-radius: 6px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
 }
 .info-card h4 {
-    font-size: 0.72rem;
+    font-size: 1rem;
     font-weight: 600;
-    letter-spacing: 0.09em;
-    color: #5b9bd5;
-    text-transform: uppercase;
-    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.02em;
+    color: #005b96;
+    margin: 0 0 0.8rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 0.4rem;
 }
 .info-card p {
-    font-size: 0.82rem;
-    color: #94a3b8;
+    font-size: 0.92rem;
+    color: #334155;
     line-height: 1.6;
     margin: 0;
 }
 
 /* Section headers */
 .section-label {
-    font-size: 0.7rem;
+    font-size: 1rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
-    color: #5b9bd5;
-    text-transform: uppercase;
-    border-bottom: 1px solid #1e3a5f;
+    letter-spacing: 0.04em;
+    color: #004b7c;
+    border-bottom: 2px solid #e2e8f0;
     padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
 }
 
 /* Upload zone styling override */
 .upload-zone {
-    background: #0d1b2a;
-    border: 1px dashed #2d4a6b;
-    border-radius: 6px;
-    padding: 2rem;
+    background: #ffffff;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    padding: 2.5rem;
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 /* Metric card */
@@ -113,96 +121,106 @@ html, body, [class*="css"] {
     margin-top: 1rem;
 }
 .metric-card {
-    background: #0d1b2a;
-    border: 1px solid #1e3a5f;
-    border-radius: 4px;
-    padding: 1rem 1.2rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 1.2rem;
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 .metric-card .value {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: #63b3ed;
+    color: #005b96;
     line-height: 1;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
 }
 .metric-card .label {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    color: #4a7fab;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #64748b;
     text-transform: uppercase;
 }
 
 /* Result cards */
 .result-normal {
-    background: #051a14;
-    border: 1px solid #1a4731;
-    border-left: 4px solid #22c55e;
-    border-radius: 4px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 5px solid #22c55e;
+    border-radius: 6px;
     padding: 1.2rem 1.5rem;
     margin-bottom: 1rem;
 }
 .result-abnormal {
-    background: #1a0d0d;
-    border: 1px solid #4a1919;
-    border-left: 4px solid #ef4444;
-    border-radius: 4px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 5px solid #ef4444;
+    border-radius: 6px;
     padding: 1.2rem 1.5rem;
     margin-bottom: 1rem;
 }
 .result-suspect {
-    background: #1a1508;
-    border: 1px solid #4a3c10;
-    border-left: 4px solid #f59e0b;
-    border-radius: 4px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 5px solid #f59e0b;
+    border-radius: 6px;
     padding: 1.2rem 1.5rem;
     margin-bottom: 1rem;
 }
 .result-label {
-    font-size: 0.68rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
 }
 .result-value {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
 }
 .result-conf {
-    font-size: 0.78rem;
-    color: #94a3b8;
-    margin-top: 0.2rem;
+    font-size: 0.85rem;
+    color: #475569;
+    margin-top: 0.3rem;
 }
 
 /* Clinical note */
 .clinical-note {
-    background: #0d1b2a;
-    border: 1px solid #1e3a5f;
-    border-radius: 4px;
-    padding: 1rem 1.2rem;
-    font-size: 0.82rem;
-    color: #94a3b8;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #64748b;
+    border-radius: 6px;
+    padding: 1.2rem;
+    font-size: 0.9rem;
+    color: #334155;
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 /* Table */
-.stDataFrame { font-size: 0.8rem !important; }
+.stDataFrame { font-size: 0.85rem !important; }
 
 /* Spinner */
-.stSpinner { color: #2d7dd2 !important; }
+.stSpinner { color: #005b96 !important; }
 
 /* Divider */
-hr { border-color: #1e3a5f !important; }
+hr { border-color: #e2e8f0 !important; }
 
 /* Streamlit block tweaks */
 div[data-testid="stFileUploader"] {
-    background: #0d1b2a !important;
-    border: 1px dashed #2d4a6b !important;
-    border-radius: 6px;
+    background: #ffffff !important;
+    border: 2px dashed #cbd5e1 !important;
+    border-radius: 8px;
+    padding: 1rem;
+}
+div[data-testid="stFileUploader"]:hover {
+    border-color: #005b96 !important;
+}
+/* Ensure the upload text is legible */
+div[data-testid="stFileUploader"] section {
+    color: #475569 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -215,20 +233,24 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ─── About CTG section ────────────────────────────────────────────────────────
+# ─── Clinical Context & System Information ────────────────────────────────────
 st.markdown("""
 <div class="info-grid">
     <div class="info-card">
-        <h4>What is CTG?</h4>
-        <p>Cardiotocography (CTG) is the simultaneous electronic recording of the fetal heart rate (FHR) and uterine contractions (UC). It is the primary clinical tool for assessing fetal well-being during labour and high-risk pregnancies.</p>
+        <h4>What is Cardiotocography (CTG)?</h4>
+        <p>Cardiotocography is a fundamental clinical technique used to continuously monitor the fetal heart rate (FHR) and the mother's uterine contractions (UC). In clinical practice, interpreting these signals assesses fetal well-being, highlighting aspects such as baseline heart rate, beat-to-beat variability, accelerations, and signs of deceleration during contractions.</p>
     </div>
     <div class="info-card">
-        <h4>Clinical Significance</h4>
-        <p>Abnormal CTG patterns are associated with fetal hypoxia and acidosis. Early detection of pathological tracings allows timely clinical intervention — reducing perinatal morbidity and mortality. Misinterpretation remains a leading cause of adverse birth outcomes.</p>
+        <h4>What This System Will Do</h4>
+        <p>This platform accepts raw, 1 Hz downsampled CTG patient records. It automatically extracts a contiguous 60-minute segment, calculates vital clinical metrics, and processes the signal to detect any underlying pathological conditions. It provides clear, actionable results combining traditional interpretation criteria with algorithmic AI processing.</p>
     </div>
     <div class="info-card">
-        <h4>How This System Works</h4>
-        <p>The platform fuses a <strong>deep learning model</strong> (ResNet50 + Bidirectional LSTM + Attention, trained on the CTU-CHB intrapartum database) with a <strong>FIGO rule-based engine</strong> to produce dual, interpretable clinical outputs.</p>
+        <h4>Technical Objective</h4>
+        <p>The primary aim of this system is to bridge the gap between subjective visual interpretation by clinicians and objective, data-driven analysis. By fusing a <strong>Deep Learning Model</strong> (ResNet50 Hybrid Attention architecture) with a strict <strong>FIGO Rule-Based Engine</strong>, the software aims to minimize inter-observer variability and enhance diagnostic consistency.</p>
+    </div>
+    <div class="info-card">
+        <h4>Clinical Utility</h4>
+        <p>Early and accurate detection of abnormal CTG tracings is essential for anticipating risks such as fetal hypoxia or acidosis. This application functions as a clinical decision support system, providing an automated "second opinion" to help obstetricians, nurses, and midwives make timely and safe clinical interventions.</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -320,23 +342,23 @@ if uploaded_files and len(uploaded_files) >= 2:
                     t = np.arange(len(fhr_seg)) / 60.0
 
                     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 4.5), sharex=True)
-                    fig.patch.set_facecolor('#0d1b2a')
+                    fig.patch.set_facecolor('#ffffff')
                     for ax in (ax1, ax2):
-                        ax.set_facecolor('#0d1b2a')
-                        ax.tick_params(colors='#94a3b8', labelsize=8)
+                        ax.set_facecolor('#ffffff')
+                        ax.tick_params(colors='#475569', labelsize=8)
                         for sp in ax.spines.values():
-                            sp.set_color('#1e3a5f')
+                            sp.set_color('#cbd5e1')
 
-                    ax1.plot(t, fhr_seg, color='#63b3ed', linewidth=0.7)
-                    ax1.set_ylabel("FHR (bpm)", color='#7fafd4', fontsize=8, labelpad=8)
+                    ax1.plot(t, fhr_seg, color='#0ea5e9', linewidth=0.8)
+                    ax1.set_ylabel("FHR (bpm)", color='#334155', fontsize=8, labelpad=8)
                     ax1.set_ylim(bottom=50)
-                    ax1.axhline(110, color='#22c55e', linewidth=0.4, linestyle='--', alpha=0.5, label='Normal range (110–160 bpm)')
-                    ax1.axhline(160, color='#22c55e', linewidth=0.4, linestyle='--', alpha=0.5)
-                    ax1.legend(fontsize=7, labelcolor='#94a3b8', framealpha=0, loc='upper right')
+                    ax1.axhline(110, color='#10b981', linewidth=0.6, linestyle='--', alpha=0.7, label='Normal range (110–160 bpm)')
+                    ax1.axhline(160, color='#10b981', linewidth=0.6, linestyle='--', alpha=0.7)
+                    ax1.legend(fontsize=7, labelcolor='#475569', framealpha=0, loc='upper right')
 
-                    ax2.plot(t, uc_seg, color='#f97316', linewidth=0.7)
-                    ax2.set_ylabel("UC", color='#7fafd4', fontsize=8, labelpad=8)
-                    ax2.set_xlabel("Time (minutes)", color='#94a3b8', fontsize=8)
+                    ax2.plot(t, uc_seg, color='#ec4899', linewidth=0.8)
+                    ax2.set_ylabel("UC", color='#334155', fontsize=8, labelpad=8)
+                    ax2.set_xlabel("Time (minutes)", color='#475569', fontsize=8)
 
                     plt.tight_layout(pad=1.0)
                     st.pyplot(fig)
@@ -367,16 +389,16 @@ if uploaded_files and len(uploaded_files) >= 2:
                             confidence = 1 - pred_prob
                             st.markdown(f"""
                             <div class="result-normal">
-                                <div class="result-label" style="color:#22c55e;">DL Classification</div>
-                                <div class="result-value" style="color:#22c55e;">Normal</div>
+                                <div class="result-label" style="color:#15803d;">DL Classification</div>
+                                <div class="result-value" style="color:#15803d;">Normal</div>
                                 <div class="result-conf">Model confidence: {confidence:.1%}</div>
                             </div>""", unsafe_allow_html=True)
                         else:
                             confidence = pred_prob
                             st.markdown(f"""
                             <div class="result-abnormal">
-                                <div class="result-label" style="color:#ef4444;">DL Classification</div>
-                                <div class="result-value" style="color:#ef4444;">Abnormal</div>
+                                <div class="result-label" style="color:#b91c1c;">DL Classification</div>
+                                <div class="result-value" style="color:#b91c1c;">Abnormal</div>
                                 <div class="result-conf">Model confidence: {confidence:.1%}</div>
                             </div>""", unsafe_allow_html=True)
 
@@ -407,20 +429,20 @@ if uploaded_files and len(uploaded_files) >= 2:
                         if figo_class == "Normal":
                             st.markdown(f"""
                             <div class="result-normal">
-                                <div class="result-label" style="color:#22c55e;">FIGO Classification</div>
-                                <div class="result-value" style="color:#22c55e;">Normal</div>
+                                <div class="result-label" style="color:#15803d;">FIGO Classification</div>
+                                <div class="result-value" style="color:#15803d;">Normal</div>
                             </div>""", unsafe_allow_html=True)
                         elif figo_class == "Suspect":
                             st.markdown(f"""
                             <div class="result-suspect">
-                                <div class="result-label" style="color:#f59e0b;">FIGO Classification</div>
-                                <div class="result-value" style="color:#f59e0b;">Suspect</div>
+                                <div class="result-label" style="color:#b45309;">FIGO Classification</div>
+                                <div class="result-value" style="color:#b45309;">Suspect</div>
                             </div>""", unsafe_allow_html=True)
                         else:
                             st.markdown(f"""
                             <div class="result-abnormal">
-                                <div class="result-label" style="color:#ef4444;">FIGO Classification</div>
-                                <div class="result-value" style="color:#ef4444;">Pathologic</div>
+                                <div class="result-label" style="color:#b91c1c;">FIGO Classification</div>
+                                <div class="result-value" style="color:#b91c1c;">Pathologic</div>
                             </div>""", unsafe_allow_html=True)
 
                         st.markdown(f'<div class="clinical-note"><strong>Clinical note:</strong> {figo_explanation}</div>', unsafe_allow_html=True)
