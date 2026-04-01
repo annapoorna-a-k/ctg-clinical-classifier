@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import wfdb
 from scipy.signal import find_peaks
+import matplotlib
+matplotlib.use('Agg')   # headless backend for Streamlit Cloud
 import matplotlib.pyplot as plt
 from PIL import Image as PILImage
 import warnings
