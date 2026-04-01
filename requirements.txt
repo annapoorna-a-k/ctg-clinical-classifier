@@ -7,3 +7,5 @@ wfdb
 gdown
 matplotlib
 Pillow
+opencv-python-headless
+

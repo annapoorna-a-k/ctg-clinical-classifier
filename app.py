@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import cv2
 import gdown
 import ctg_utils
 
@@ -42,6 +43,32 @@ except Exception as e:
     st.stop()
 
 st.markdown("---")
+
+# ─── Signal-to-image helper (matches training pipeline exactly) ──────────────
+IMG_SIZE = (224, 224)
+SEQ_LEN  = 120          # ← model was trained on 120-sample FHR windows at 1 Hz (2 min)
+
+def sequence_to_image(seq):
+    """Converts a 1-D FHR sequence (length = SEQ_LEN) to a 224×224 RGB image
+    using the same cv2 polyline approach used during training."""
+    img = np.ones((224, 224, 3), dtype=np.uint8) * 255
+    pad = 8
+    w = 224 - 2 * pad
+    h = 224 - 2 * pad
+
+    seq_min, seq_max = seq.min(), seq.max()
+    if seq_max > seq_min:
+        y_scaled = (seq - seq_min) / (seq_max - seq_min)
+    else:
+        y_scaled = np.zeros_like(seq) + 0.5
+
+    y_coords = 224 - pad - (y_scaled * h).astype(np.int32)
+    x_coords = np.linspace(pad, 224 - pad, len(seq)).astype(np.int32)
+    pts = np.column_stack((x_coords, y_coords)).reshape((-1, 1, 2))
+    cv2.polylines(img, [pts], isClosed=False, color=(255, 0, 0), thickness=2,
+                  lineType=cv2.LINE_AA)
+    img_resized = cv2.resize(img, IMG_SIZE)
+    return (img_resized / 255.0).astype(np.float32)
 
 # ─── File Upload ─────────────────────────────────────────────────────────────
 st.markdown("### 📂 Upload Patient Record")
@@ -108,17 +135,19 @@ if uploaded_files and len(uploaded_files) >= 2:
                     figo_class, figo_explanation = ctg_utils.figo_classify_and_explain(features)
 
                     # ── Model Inference ───────────────────────────────────────
-                    # Use the last 10 minutes (600 s) as the window
-                    fhr_600 = np.nan_to_num(fhr_seg[-600:], nan=0.0)
-                    uc_600  = np.nan_to_num(uc_seg[-600:],  nan=0.0)
+                    # The model was trained on 120-sample (2-minute) FHR windows.
+                    # We take the last 120 timesteps of the 3 600-step FHR segment,
+                    # apply the same cv2 polyline image renderer used at training time,
+                    # and reshape the sequence to (120, 1) as expected by the LSTM branch.
+                    fhr_window = np.nan_to_num(fhr_seg[-SEQ_LEN:], nan=0.0).astype(np.float32)
 
-                    # Image branch   (1, 224, 224, 3)
-                    img_input = ctg_utils.window_to_image(fhr_600, uc_600)
-                    img_input = np.expand_dims(img_input, axis=0)
+                    # Image branch  (1, 224, 224, 3)
+                    img_arr   = sequence_to_image(fhr_window)
+                    img_input = np.expand_dims(img_arr, axis=0)
 
-                    # Sequence branch  (1, 600, 2)
-                    seq_input = np.stack((fhr_600, uc_600), axis=-1)
-                    seq_input = np.expand_dims(seq_input, axis=0)
+                    # Sequence branch  (1, 120, 1)
+                    seq_arr   = fhr_window.reshape(SEQ_LEN, 1)
+                    seq_input = np.expand_dims(seq_arr, axis=0)
 
                     with st.spinner("Running ResNet50 inference…"):
                         pred_prob = float(model.predict([img_input, seq_input], verbose=0)[0][0])
