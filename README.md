@@ -1,6 +1,6 @@
 # AI-Assisted Cardiotocography (CTG) Analysis System
 
-[![Streamlit App](https://static.streamlit.io/badge_streamlit.svg)](https://ctg-clinical-classifier-9gzh2e7rkq5uzze7vvxsuz.streamlit.app/)
+[🚀 Live Streamlit Application](https://ctg-clinical-classifier-9gzh2e7rkq5uzze7vvxsuz.streamlit.app/)
 
 ## Overview
 
