@@ -425,7 +425,7 @@ if uploaded_files and len(uploaded_files) >= 2:
                             st.markdown(f"""
                             <div class="result-abnormal">
                                 <div class="result-label" style="color:#b91c1c;">Network Decision</div>
-                                <div class="result-value" style="color:#b91c1c;">Pathologic / Abnormal</div>
+                                <div class="result-value" style="color:#b91c1c;">Abnormal</div>
                                 <div class="result-conf">Prediction Confidence: {confidence:.1%}</div>
                             </div>""", unsafe_allow_html=True)
 
@@ -442,6 +442,7 @@ if uploaded_files and len(uploaded_files) >= 2:
 
                     with col_right:
                         st.markdown("**Extracted Clinical Metrics**")
+                        st.caption("Analyzed and extracted continuously over the 60-minute window.")
                         st.markdown(f"""
                         <div class="metric-row">
                             <div class="metric-card">

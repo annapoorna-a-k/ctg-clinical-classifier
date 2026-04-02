@@ -187,7 +187,8 @@ def extract_features(fhr, uc):
 
 def figo_classify_and_explain(row):
     """
-    Applies the 1-Hz adapted FIGO rule engine and returns both a class and a text explanation.
+    Applies clinical rule extraction to generate detailed explanations.
+    Returns 'Normal', 'Suspect', or 'Abnormal' and the explanation string.
     """
     LB   = row['LB']
     MSTV = row['MSTV']
@@ -204,43 +205,43 @@ def figo_classify_and_explain(row):
         base = 'normal'
     elif 100 <= LB < 110 or 160 < LB <= 180:
         base = 'suspicious'
-        explanations.append(f"Baseline FHR is suspicious ({LB:.1f} bpm).")
+        explanations.append(f"Baseline FHR is deviating from normal ({LB:.1f} bpm), suggesting early signs of physiological stress.")
     else:
-        base = 'pathological'
-        explanations.append(f"Baseline FHR is pathological ({LB:.1f} bpm).")
+        base = 'abnormal'
+        explanations.append(f"Baseline FHR is highly abnormal ({LB:.1f} bpm), a strong indicator of potential hypoxia or severe distress.")
 
     # VARIABILITY
     if MSTV < 1:
-        var = 'pathological'
-        explanations.append(f"Variability is critically low / pathological (MSTV = {MSTV:.2f}).")
+        var = 'abnormal'
+        explanations.append(f"Heart rate variability is critically low (MSTV = {MSTV:.2f} bpm). This lack of fluctuation points to a potential depression in the central nervous system or significant acidemia.")
     elif MSTV < 2:
         var = 'suspicious'
-        explanations.append(f"Variability is suspiciously low (MSTV = {MSTV:.2f}).")
+        explanations.append(f"Heart rate variability is reduced (MSTV = {MSTV:.2f} bpm), warranting closer observation for potential fetal sleep state or emerging physiological stress.")
     else:
         var = 'normal'
 
     # DECELERATIONS
     if DP > 0 or DS >= 5:
-        dec = 'pathological'
-        explanations.append(f"Dangerous decelerations detected ({DP} prolonged, {DS} severe).")
+        dec = 'abnormal'
+        explanations.append(f"Critical episodic changes detected: the sequence contains significant drops in heart rate ({DP} prolonged, {DS} severe decelerations), indicating acute hypoxic events during contractions.")
     elif DS >= 2 or DL >= 2:
         dec = 'suspicious'
-        explanations.append(f"Suspicious decelerations detected ({DS} severe, {DL} light).")
+        explanations.append(f"Notable episodic changes detected: presence of recurring decelerations ({DS} severe, {DL} light) suggests increased fetal vulnerability to uterine contractions.")
     else:
         dec = 'normal'
 
     # UC EFFECT
     if UC_rate > 7 and dec == 'suspicious':
-        dec = 'pathological'
-        explanations.append("High contraction rate (> 7 per 10 min) coupled with decelerations makes it pathological.")
+        dec = 'abnormal'
+        explanations.append("The presence of uterine tachysystole (> 7 contractions per 10 minutes) combined with decelerating patterns elevates the risk profile significantly.")
 
     # CLASSIFICATION LOGIC
-    explanation_text = " ".join(explanations) if explanations else "All clinical parameters appear normal."
+    explanation_text = " ".join(explanations) if explanations else "All extracted clinical parameters (Baseline, Variability, and Decelerations) fall well within standard physiological norms, indicating a healthy fetal state over the 60-minute observation window."
 
-    if dec == 'pathological' or (var == 'pathological' and dec != 'normal'):
-        return 'Pathologic', explanation_text
+    if dec == 'abnormal' or (var == 'abnormal' and dec != 'normal'):
+        return 'Abnormal', explanation_text
     
-    if base == 'normal' and var != 'pathological' and dec == 'normal':
+    if base == 'normal' and var != 'abnormal' and dec == 'normal':
         return 'Normal', explanation_text
 
     return 'Suspect', explanation_text
