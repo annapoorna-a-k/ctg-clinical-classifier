@@ -1,0 +1,37 @@
+# Environment
+.venv/
+env/
+venv/
+ENV/
+bin/
+lib/
+share/
+include/
+Scripts/
+pyvenv.cfg
+pip-selfcheck.json
+d_env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data & Large files (Drive handles these)
+models/
+temp/
+*.zip
+*.npy
+*.dat
+*.hea
+
+# IDEs
+.vscode/
+.idea/
+
+# Local archive (Teacher won't see this)
+archive/
+
+# Streamlit
+.streamlit/
+! .streamlit/config.toml
