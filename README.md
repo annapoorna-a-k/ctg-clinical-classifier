@@ -40,12 +40,15 @@ graph TD
 
 The system extracts and reports the following vital parameters analyzed over a **60-minute window**:
 
-| Metric | Description | Clinical Significance |
+| Metric | Key Feature | Clinical Significance & Thresholds |
 | :--- | :--- | :--- |
-| **Baseline FHR** | Median heart rate over the window. | Identifies Tachycardia/Bradycardia. |
-| **MSTV** | Mean Short-Term Variability. | Key indicator of fetal nervous system health. |
-| **UC Rate** | Contractions per 10 minutes. | Monitors for Tachysystole. |
-| **Decelerations** | Early, Late, and Prolonged drops in FHR. | Crucial for identifying fetal hypoxia. |
+| **Baseline FHR (LB)** | Basal Heart Rate | Normal range: 110–160 bpm. Identifies fetal tachycardia or bradycardia states. |
+| **MSTV** | Mean Short-Term Variability | Primary indicator of the autonomic nervous system control. MSTV < 2.0 bpm is considered suspicious. |
+| **Accelerations (AC)** | Transitory FHR Increases | Presence of periodic accelerations (>15 bpm for 15s) indicates a reactive, healthy fetus. |
+| **Light Decelerations (DL)** | Mild Ephemeral Decreases | Temporary drops in FHR, typically associated with healthy physiological responses to labor. |
+| **Severe Decelerations (DS)** | Deep FHR Drops | Decelerations dropping more than 45 bpm below baseline. Critical indicators of acute distress. |
+| **Prolonged Decelerations (DP)** | Lengthy FHR Drops | Decelerations lasting >2 minutes. Significant risk factor for fetal hypoxia and acidemia. |
+| **UC Rate** | Uterine Activity | Monitored as frequency per 10 minutes. Identifies tachysystole which can lead to fetal stress. |
 
 ## Reproducibility & Local Setup
 
