@@ -74,10 +74,19 @@ The training loop utilized parameter sweeps to avoid discriminator overpowering 
 *   **Noise Injection Tuning:** Swept values for Gaussian Noise variance (decaying standard deviation) to stabilize the continuous divergence.
 *   **Label Smoothing:** Real samples mapped to $0.95$.
 
-**2. Tuning for ResNet50 Classifier (`model-final-review3.ipynb`):**
-Using a centralized `config` dictionary, grid and random sweeps were utilized:
-*   **Batch Size & LR Schedulers:** Tuned to 64 alongside a `ReduceLROnPlateau` scheduler (Factor: 0.1, Patience: 5) and Early Stopping (Patience: 10).
-*   **Regularization Tuning:** Dropout rates (tuned to 0.5) and L2 Weight Decay were incorporated to explicitly mitigate overfitting.
+**2. Architecture Search & Tuning for Classifier (`model-final-review3.ipynb`):**
+A comprehensive sweep was conducted across 30 different spatial-temporal hybrid architectures, evaluating **ResNet50** vs. **MobileNetV2** backbones coupled with different RNN variants (LSTM, GRU, BiLSTM, BiGRU):
+*   **Selected Backbone:** **ResNet50 Hybrid** outperformed MobileNetV2. The best performing pre-augmentation architecture was `ResNet50 + LSTM (3 Layers, 128 Units)` with **81.82%** Test Accuracy (vs. MobileNet's best at 79.73%).
+*   **Final Hyperparameter Configuration (`binary_3600_advanced`):** For the final training on the augmented dataset, the core architecture was heavily regularized and consolidated to prevent overfitting:
+    *   `lstm_layers`: 1 (reduced from 3 to limit capacity on balanced data)
+    *   `lstm_units`: 128
+    *   `attn_num_heads`: 4
+    *   `dropout`: 0.40
+    *   `head_dense`: [128, 64]
+*   **Two-Phase Fine-Tuning Strategy:** 
+    *   **Phase 1 (Frozen Backbone):** Trained custom Top Layers (LSTM + Attention) with `RMSprop` and $LR=1e-3$ for stable convergence.
+    *   **Phase 2 (Unfrozen):** Unfroze the top 50 sequence layers of ResNet50, applying a heavily decayed $LR=1e-5$ with `ReduceLROnPlateau` for end-to-end morphological fine-tuning.
+    This strict methodology enabled perfectly balanced class validation distributions (F1-score: **0.94** for both Normal and Abnormal classes).
 
 ---
 
