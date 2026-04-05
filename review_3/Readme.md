@@ -85,14 +85,21 @@ Using a centralized `config` dictionary, grid and random sweeps were utilized:
 
 Proper evaluation pipelines were embedded to validate clinical viability.
 
-*   **Quantitative Results Summary:**
+*   **Quantitative Results Summary (Ablation Study):**
 
+**1. Architecture Ablation (Fixed Initial Dataset)**
 | Experiment | Accuracy | Significance |
 | :--- | :--- | :--- |
-| ResNet50+LSTM (Baseline) | 66.16% | Initial candidate |
-| ResNet50+LSTM+Attention | 73.06% | Architecture gain (+6.9%) |
-| MLP (Handcrafted Features) | 92.02% | Competitive lower baseline |
-| **Proposed System (Final)** | **94.40%** | **Final marked improvement** |
+| **ResNet50+LSTM (Baseline)** | 66.16% | Initial candidate |
+| **ResNet50+LSTM+Embedding** | 71.96% | ▲ Architecture gain (+5.80%) |
+| **ResNet50+LSTM+Attention** | 73.06% | ▲ Architecture gain (+6.90%) |
+| **MLP (Handcrafted Features)** | 92.02% | Competitive lower baseline |
+
+**2. Data Ablation (Impact of GAN Augmentation)**
+| Experiment | Accuracy | Significance |
+| :--- | :--- | :--- |
+| **ResNet50+LSTM+Attention** (Before Augmentation) | 73.06% | Best Architecture (Imbalanced) |
+| **Proposed System (Final)** (After GAN Augmentation)| **94.40%** | **▲ Final marked improvement** |
 
 *   **GAN Quality Metrics (Statistical Realism):** The generator's authenticity was measured utilizing the **Standard Deviation Ratio ($Std\_Ratio$)**. A final $Std\_Ratio = 0.924$ acts as a statistical proof that the synthetics possess 92.4% of the variability of real clinical samples.
 *   **Classifier Performance Metrics:** Accuracy was supported by:
