@@ -349,19 +349,19 @@ st.markdown("""
 <div class="info-grid">
     <div class="info-card">
         <h4>📋 What is Cardiotocography (CTG)?</h4>
-        <p>Cardiotocography is a fundamental clinical technique used to continuously monitor the fetal heart rate (FHR) and the mother's uterine contractions (UC). In clinical practice, interpreting these signals assesses fetal well-being, highlighting aspects such as baseline heart rate, beat-to-beat variability, accelerations, and signs of deceleration during contractions.</p>
+        <p>A standard clinical technique to monitor fetal heart rate and uterine contractions. Evaluating CTG traces helps clinicians detect distress, variability, and decelerations to ensure fetal well-being during labor.</p>
     </div>
     <div class="info-card">
-        <h4>⚙️ What This System Will Do</h4>
-        <p>This platform accepts raw, 1 Hz downsampled CTG patient records. It automatically extracts a contiguous 60-minute segment, calculates vital clinical metrics, and processes the signal to detect any underlying pathological conditions. It provides clear, actionable results combining traditional interpretation criteria with algorithmic AI processing.</p>
+        <h4>⚙️ How This App Works</h4>
+        <p>Simply upload a patient's CTG <code>.dat</code> file. Our system instantly isolates a 60-minute window, calculates vital clinical metrics, and uses Deep Learning to flag any critical pathological patterns.</p>
     </div>
     <div class="info-card">
-        <h4>🧠 Technical Objective</h4>
-        <p>The primary aim of this system is to bridge the gap between subjective visual interpretation by clinicians and objective, data-driven analysis. By fusing a <strong>Deep Learning Model</strong> (ResNet50 Hybrid Attention architecture) with a strict <strong>Clinical Rule-Based Engine</strong>, the software aims to minimize inter-observer variability and enhance diagnostic consistency.</p>
+        <h4>🧠 The Objective</h4>
+        <p>Transform subjective visual interpretation into an objective, data-driven science. By fusing <strong>AI</strong> with strict <strong>Clinical Rules</strong>, we minimize human bias to deliver highly consistent diagnostics.</p>
     </div>
     <div class="info-card">
         <h4>🏥 Clinical Utility</h4>
-        <p>Early and accurate detection of abnormal CTG tracings is essential for anticipating risks such as fetal hypoxia or acidosis. This application functions as a clinical decision support system, providing an automated "second opinion" to help obstetricians, nurses, and midwives make timely and safe clinical interventions.</p>
+        <p>An intelligent, automated "second opinion" for the delivery ward. Detect fetal hypoxia and acidosis earlier, empowering healthcare professionals to make faster, safer interventions.</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -371,11 +371,11 @@ st.markdown('<div class="section-label">AI Model Architecture: ResNet50 Hybrid A
 st.markdown("""
 <div class="info-grid" style="grid-template-columns: 1fr; margin-bottom: 2rem;">
     <div class="info-card">
-        <p>Our platform is powered by a state-of-the-art <strong>ResNet50 Hybrid Attention</strong> deep learning model. This architecture is specifically designed to handle the complex spatial and temporal characteristics of Cardiotocography signals:</p>
+        <p>Powered by our state-of-the-art <strong>ResNet50 Hybrid Attention</strong> neural network—custom-built for evaluating clinical time-series data:</p>
         <ul style="margin-top: 10px; font-size: 0.88rem; line-height: 1.6;">
-            <li><strong>Spatial Feature Extraction:</strong> The model transforms 1D CTG signals into 2D morphological representations, passing them through a ResNet50 network to detect visual patterns, mimicking how a human expert visually analyses a paper trace.</li>
-            <li><strong>Temporal Sequence Analysis:</strong> Concurrently, the system processes the raw time-series data using temporal architectures to understand sequence dependencies and identify events such as prolonged decelerations over the 60-minute window.</li>
-            <li><strong>Attention Mechanism:</strong> A specialized attention module merges these spatial and temporal branches, dynamically focusing on critical segments of the recording. This ensures that the most clinically significant events drive the final diagnostic prediction.</li>
+            <li><strong>👁️ Spatial Vision (ResNet50):</strong> Translates raw signals into 2D images. The network "sees" morphology and visual patterns exactly like an expert physician reading a paper trace.</li>
+            <li><strong>⏱️ Temporal Memory (LSTM):</strong> Processes the raw time-series sequences to dynamically track heartbeat drops and prolonged decelerations over the entire 60-minute window.</li>
+            <li><strong>🎯 Dynamic Attention:</strong> Merges spatial and temporal data. The AI automatically learns to hyper-focus on critical danger zones, ignoring clinical noise to make a highly accurate final prediction.</li>
         </ul>
     </div>
 </div>
