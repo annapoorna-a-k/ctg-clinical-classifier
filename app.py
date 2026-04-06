@@ -32,12 +32,28 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
 }
 
-/* Base dark background */
+/* Base dark animated cyber-grid background */
 .stApp {
     background-color: #0f172a;
-    background-image:
-        radial-gradient(ellipse at 10% 0%, rgba(14,165,233,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 100%, rgba(139,92,246,0.06) 0%, transparent 50%);
+    background-image: 
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08) 0%, transparent 45%),
+        linear-gradient(rgba(56, 189, 248, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.025) 1px, transparent 1px);
+    background-size: 250% 250%, 250% 250%, 35px 35px, 35px 35px;
+    animation: cyberGridFloat 35s linear infinite;
+}
+
+@keyframes cyberGridFloat {
+    0% {
+        background-position: 0% 0%, 100% 100%, 0px 0px, 0px 0px;
+    }
+    50% {
+        background-position: 100% 100%, 0% 0%, 17px 17px, 17px 17px;
+    }
+    100% {
+        background-position: 0% 0%, 100% 100%, 35px 35px, 35px 35px;
+    }
 }
 
 /* ─── Header band ─── */
@@ -747,7 +763,7 @@ with tab_analysis:
                                 st.markdown(f"""
                                 <div class="result-suspect">
                                     <div class="result-label" style="color:#f59e0b;">Network Decision</div>
-                                    <div class="result-value" style="color:#f59e0b;">🚨 Abnormal</div>
+                                    <div class="result-value" style="color:#f59e0b;">⚠️ Suspect</div>
                                     <div class="result-conf">Prediction Confidence: {confidence:.1%}</div>
                                 </div>""", unsafe_allow_html=True)
                             else:
