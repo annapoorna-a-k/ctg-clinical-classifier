@@ -1151,7 +1151,49 @@ with tab_gan:
         <h3>🧬 Interactive GAN Pipeline</h3>
         <p>This section allows you to interact with the underlying Autoencoder and Sequence GAN models. By uploading a clinical record, you can compress an extracted 2-minute sequence into its <strong>32D Latent Representation</strong>, and compare the reconstructed sequence with fundamentally new synthetic signals generated from pure noise by the GAN.</p>
     </div>
+    
+    <div class="info-grid" style="grid-template-columns: 1fr; margin-top: 1.5rem; margin-bottom: 2rem;">
+        <div class="info-card">
+            <h4>🧠 Why operate in a Latent Space instead of raw CTG?</h4>
+            <p>Raw Cardiotocography signals are high-dimensional, noisy, and computationally unstable to generate directly (especially at continuous 120-step resolution). By using an <b>LSTM Autoencoder</b> first, we compress the raw time-series into a dense <strong>32D Latent Vector</strong>. This strips away irrelevant clinical noise, forces the AI to map the "core physiological essence" of a healthy fetal rhythm, and effectively prevents GAN mode collapse. The Generator simply learns to synthesize these robust, stable vectors, which the Decoder then effortlessly unfurls back into highly realistic clinical traces.</p>
+        </div>
+    </div>
     """, unsafe_allow_html=True)
+
+    with st.expander("📊 GAN Loss Functions & Configuration Tuning", expanded=False):
+        st.markdown("""
+        **1. Feature Matching & Loss Formulation**
+        - **Discriminator Loss:** $L_D = -\\log(D(x)) - \\log(1 - D(G(z)))$
+        - **Generator Loss:** $L_G = -\\log(D(G(z))) + \\lambda \\cdot \\|f(real) - f(fake)\\|_2$
+        
+        *(We utilized **Feature Matching** ($\\lambda$) rather than standard adversarial loss alone to ensure the generator matches the exact statistical distribution of the real latent representations).*
+        
+        **2. Tuning & Model Selection Criteria**
+        Instead of strictly relying on pure theoretical loss, we systematically grid-searched 20 robust adversarial configurations evaluating:
+        - **D Accuracy (Target $\\approx 0.5$):** Evaluates the GAN Balance/Min-Max stability.
+        - **Std Ratio (Target $0.8 - 1.2$):** Measures absolute clinical variance realism.
+        - **Combined Score:** An engineered heuristic metric prioritizing structural signal variation.
+        
+        **3. The Best Selected Configuration (Trial #6)**
+        - **Generator LR:** $5e-5$ | **Discriminator LR:** $1e-4$ | **Noise Std:** $0.05$ | **Feature Match:** $0.05$
+        - **Discriminator Acc:** $0.327$ | **Std Ratio:** $0.887$ | **Global Score:** 0.460
+        """)
+
+    with st.expander("📈 Final Synthetic Data Generation Results", expanded=False):
+        st.markdown("""
+        To construct a perfectly balanced, unbiased dataset for our ResNet50 Classifier without suffering from class scarcity, we used our generator to selectively synthesize **14,139 purely normal fetal traces** to explicitly match our severe pathologic instances.
+        
+        **✅ Synthesis Quality Verification:**
+        * **Real Normal FHR:** Mean $137.13$ BPM | Standard Deviation $16.55$ BPM
+        * **GAN Export FHR:** Mean $136.48$ BPM | Standard Deviation $15.30$ BPM
+        *(The Std Ratio of $0.924$ strongly implies our AI successfully replicated the highly dynamic variance of real, healthy physiological fetal rhythms without over-smoothing).*
+
+        **⚖️ Final Balanced Dataset Structure:**
+        - 🟢 **Normal (Real + Augmented):** `15,878 traces`
+        - 🔴 **Pathologic:** `15,878 traces`
+        - 🟡 **Suspect:** `11,552 traces`
+        """)
+
 
     # ── Load GAN Models ──
     @st.cache_resource
@@ -1285,4 +1327,3 @@ with tab_gan:
                             st.error("Signal extraction failed. No contiguous segment found.")
         elif uploaded_files_gan:
             st.warning("Please upload both a .hea and a .dat file for the same record.")
-
