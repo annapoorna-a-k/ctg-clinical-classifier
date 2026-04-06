@@ -1285,3 +1285,4 @@ with tab_gan:
                             st.error("Signal extraction failed. No contiguous segment found.")
         elif uploaded_files_gan:
             st.warning("Please upload both a .hea and a .dat file for the same record.")
+

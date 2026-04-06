@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTG Clinical Analysis System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header-band">
+        <div class="container">
+            <h1>CTG Clinical Analysis System</h1>
+            <div class="subtitle">Cardiotocography &nbsp;&middot;&nbsp; AI-Assisted Fetal Monitoring &nbsp;&middot;&nbsp; FIGO Clinical Guidelines</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Info Grid -->
+        <section class="info-grid">
+            <div class="info-card">
+                <h4>What is Cardiotocography (CTG)?</h4>
+                <p>Cardiotocography is a fundamental clinical technique used to continuously monitor the fetal heart rate (FHR) and the mother's uterine contractions (UC). In clinical practice, interpreting these signals assesses fetal well-being, highlighting aspects such as baseline heart rate, beat-to-beat variability, accelerations, and signs of deceleration during contractions.</p>
+            </div>
+            <div class="info-card">
+                <h4>What This System Will Do</h4>
+                <p>This platform accepts raw, 1 Hz downsampled CTG patient records. It automatically extracts a contiguous 60-minute segment, calculates vital clinical metrics, and processes the signal to detect any underlying pathological conditions. It provides clear, actionable results combining traditional interpretation criteria with algorithmic AI processing.</p>
+            </div>
+            <div class="info-card">
+                <h4>Technical Objective</h4>
+                <p>The primary aim of this system is to bridge the gap between subjective visual interpretation by clinicians and objective, data-driven analysis. By fusing a <strong>Deep Learning Model</strong> (ResNet50 Hybrid Attention architecture) with a strict <strong>FIGO Rule-Based Engine</strong>, the software aims to minimize inter-observer variability and enhance diagnostic consistency.</p>
+            </div>
+            <div class="info-card">
+                <h4>Clinical Utility</h4>
+                <p>Early and accurate detection of abnormal CTG tracings is essential for anticipating risks such as fetal hypoxia or acidosis. This application functions as a clinical decision support system, providing an automated "second opinion" to help obstetricians, nurses, and midwives make timely and safe clinical interventions.</p>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Tabs Container -->
+        <div class="tabs-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-target="tab-analyzer">Analyzer Interface</button>
+                <button class="tab-btn" data-target="tab-problem">Problem & Motivation</button>
+                <button class="tab-btn" data-target="tab-data">Data Engineering</button>
+                <button class="tab-btn" data-target="tab-arch">Architecture</button>
+                <button class="tab-btn" data-target="tab-metrics">Clinical Metrics</button>
+            </div>
+
+            <!-- Tab 1: Analyzer (Existing Interface) -->
+            <div class="tab-content active" id="tab-analyzer">
+                <!-- Upload Section -->
+                <section class="upload-section">
+                    <h2 class="section-label">Patient Record Upload</h2>
+                    <p>Upload the <strong>WFDB header</strong> (<code>.hea</code>) and <strong>signal</strong> (<code>.dat</code>) files for a single patient record. Both files must share the same base name (e.g. <code>1001.hea</code> and <code>1001.dat</code>).</p>
+                    
+                    <form id="uploadForm">
+                        <div class="upload-zone" id="dropZone">
+                            <div class="upload-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            </div>
+                            <p>Drag and drop your <strong>.hea</strong> and <strong>.dat</strong> files here</p>
+                            <p class="text-sm text-slate-500">or</p>
+                            <label for="fileInput" class="btn btn-outline">Browse Files</label>
+                            <input type="file" id="fileInput" multiple accept=".hea,.dat" style="display: none;">
+                            <div id="fileList" class="file-list"></div>
+                        </div>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Analyze Record</button>
+                    </form>
+                </section>
+
+                <!-- Loading Overlay -->
+                <div id="loadingOverlay" class="hidden">
+                    <div class="spinner"></div>
+                    <p id="loadingText">Processing trace and running ResNet50-Hybrid inference...</p>
+                </div>
+
+                <hr class="divider hidden" id="resultsDivider">
+
+                <!-- Results Section -->
+                <section id="resultsSection" class="hidden">
+                    <div class="alert alert-success" id="successMessage"></div>
+
+                    <h2 class="section-label">Signal Trace &mdash; 60-minute Overview</h2>
+                    <div class="plot-container">
+                        <img id="signalPlot" src="" alt="CTG Signal Plot">
+                    </div>
+
+                    <h2 class="section-label">Analysis Results</h2>
+                    <div class="results-grid">
+                        <!-- DL Result Col -->
+                        <div class="results-col">
+                            <h3>Deep Learning Assessment <span class="text-sm text-slate-500 font-normal ml-2">ResNet50 Hybrid Attention</span></h3>
+                            <div id="dlCard" class="result-card">
+                                <div class="result-label">DL Classification</div>
+                                <div class="result-value" id="dlValue"></div>
+                                <div class="result-conf" id="dlConf"></div>
+                            </div>
+
+                            <h3 class="mt-6">Extracted Signal Metrics</h3>
+                            <div class="metric-row">
+                                <div class="metric-card">
+                                    <div class="value" id="metric-LB"></div>
+                                    <div class="label">Baseline FHR (bpm)</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="value" id="metric-MSTV"></div>
+                                    <div class="label">MSTV (Variability)</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="value" id="metric-UCR"></div>
+                                    <div class="label">UC / 10 min</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="vertical-separator"></div>
+
+                        <!-- FIGO Result Col -->
+                        <div class="results-col">
+                            <h3>FIGO Rule-Based Assessment <span class="text-sm text-slate-500 font-normal ml-2">Clinical Guideline Engine</span></h3>
+                            <div id="figoCard" class="result-card">
+                                <div class="result-label">FIGO Classification</div>
+                                <div class="result-value" id="figoValue"></div>
+                            </div>
+
+                            <div class="clinical-note">
+                                <strong>Clinical note:</strong> <span id="figoExplanation"></span>
+                            </div>
+
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>Count (60 min)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Accelerations</td>
+                                        <td id="metric-AC"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Light Decelerations</td>
+                                        <td id="metric-DL"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Severe Decelerations</td>
+                                        <td id="metric-DS"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prolonged Decelerations</td>
+                                        <td id="metric-DP"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+                    <p class="disclaimer">RESEARCH USE ONLY &mdash; This system is not a certified medical device. All outputs must be reviewed and validated by a qualified clinician before any clinical decision is made.</p>
+                </section>
+            </div>
+
+            <!-- Tab 2: Problem & Motivation -->
+            <div class="tab-content" id="tab-problem">
+                <section class="info-section">
+                    <h2 class="section-label">1. Problem Definition & Motivation (Clear research/industry relevance)</h2>
+                    
+                    <h3>Problem Statement</h3>
+                    <p>Fetal Hypoxia is a leading cause of perinatal mortality. Cardiotocography (CTG) is a standard diagnostic tool used to monitor fetal heart rate (FHR) and uterine contractions (UC) to detect hypoxia. However, visual interpretation of CTG traces is highly subjective, suffering from significant inter-observer variability.</p>
+                    
+                    <h3>Motivation</h3>
+                    <p>The goal of this project is to develop an automated, data-driven Deep Learning system that effectively captures the complex, non-linear longitudinal dependencies of CTG signals. By building a robust clinical classifier, this system aims to provide objective, real-time diagnostic support, reducing human error and preventing adverse perinatal outcomes.</p>
+                </section>
+            </div>
+
+            <!-- Tab 3: Data Engineering -->
+            <div class="tab-content" id="tab-data">
+                <section class="info-section">
+                    <h2 class="section-label">2. Data Engineering (Cleaning, Augmentation, Feature Engineering)</h2>
+                    <p>Robust data engineering was performed to prepare the CTU-CHB Intrapartum dataset for deep learning models.</p>
+                    
+                    <h3>A. Data Cleaning & Interpolation (webapp/review_3/parameter-tuning-for-gan.ipynb):</h3>
+                    <ul>
+                        <li><strong>Missing Data Management:</strong> Raw WFDB signals were downsampled to 1-Hz using non-overlapping windows with <code>numpy.nanmean()</code>.</li>
+                        <li><strong>Signal Gap Interpolation:</strong> Short missing segments (under 10 minutes or 600 seconds) were successfully reconstructed using strict linear interpolation. Segments containing zero-values representing signal loss were converted to NaNs.</li>
+                        <li><strong>Segment Extraction:</strong> Standardized sequences of 120 time-steps (representing 2 minutes of continuous recording) were extracted using a 1-minute overlap stride, dropping segments with irrecoverable NaNs.</li>
+                    </ul>
+
+                    <h3>B. Data Augmentation (Sequence GAN):</h3>
+                    <p>Because clinical datasets are highly imbalanced (e.g., normal cases vastly outnumber pathological cases), a Sequence GAN was implemented. By generating high-fidelity synthetic physiological sequences, the GAN balances the dataset distribution, providing the primary classification models with a uniform class distribution.</p>
+
+                    <h3>C. Feature Engineering & Preprocessing (webapp/review 2/ and webapp/review_3/):</h3>
+                    <ul>
+                        <li><strong>Morphological Compressions:</strong> Raw sequences were compressed and passed into an LSTM-Autoencoder. This produced a 32-dimensional robust latent representation summarizing the core clinical morphology.</li>
+                        <li><strong>Time-Series Features (TSFEL):</strong> Statistical, temporal, and frequency domain metadatas were extracted using <code>tsfel</code> to capture clinical baseline rules (e.g., FIGO rules for decelerations and variability thresholds).</li>
+                        <li><strong>Image Transformations:</strong> 1D sequences were converted into 224x224 RGB image arrays via spectrogram/time-series imaging, enabling the use of advanced 2D Convolutional Networks (ResNet, MobileNet).</li>
+                    </ul>
+                </section>
+            </div>
+
+            <!-- Tab 4: Architecture -->
+            <div class="tab-content" id="tab-arch">
+                <section class="info-section">
+                    <h2 class="section-label">3. Model Architecture Justification (Why this architecture? Theoretical reasoning)</h2>
+                    
+                    <h3>1. LSTM Autoencoder + Sequence GAN:</h3>
+                    <p><strong>Theoretical Reasoning:</strong> CTG signals are highly temporal. Standard feed-forward networks fail to capture the sequential dependencies (e.g., how the fetal heart rate recovers after a contraction). The LSTM Autoencoder processes the longitudinal state natively. The subsequent GAN takes this exact latent space and applies an adversarial network (with Feature Matching and Label Smoothing) to generate physiologically plausible synthetic samples without Mode Collapse.</p>
+                    
+                    <h3>2. ResNet50 with Hybrid Attention (Final Selected Classifier):</h3>
+                    <p><strong>Theoretical Reasoning:</strong> ResNet50 is inherently powerful for spatial feature extraction but lacks an understanding of where in the timeline a critical clinical event (like a late deceleration) occurred. By attaching a Hybrid Attention Mechanism to the spatial embeddings of the ResNet50 backbone, the model dynamically learns to focus on the specific morphological segments that strongly correlate with hypoxia, mirroring how a clinician reviews a CTG tape.</p>
+                </section>
+            </div>
+
+            <!-- Tab 5: Clinical Metrics -->
+            <div class="tab-content" id="tab-metrics">
+                <section class="info-section">
+                    <h2 class="section-label">4. Key Clinical Metrics</h2>
+                    <p>The system extracts and reports the following vital parameters analyzed over a 60-minute window:</p>
+                    
+                    <table class="data-table mt-6">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Key Feature</th>
+                                <th>Clinical Significance & Thresholds</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Baseline FHR (LB)</strong></td>
+                                <td>Basal Heart Rate</td>
+                                <td>Normal range: 110–160 bpm. Identifies fetal tachycardia or bradycardia states.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MSTV</strong></td>
+                                <td>Mean Short-Term Variability</td>
+                                <td>Primary indicator of the autonomic nervous system control. MSTV &lt; 2.0 bpm is considered suspicious.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Accelerations (AC)</strong></td>
+                                <td>Transitory FHR Increases</td>
+                                <td>Presence of periodic accelerations (&gt;15 bpm for 15s) indicates a reactive, healthy fetus.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Light Decelerations (DL)</strong></td>
+                                <td>Mild Ephemeral Decreases</td>
+                                <td>Temporary drops in FHR, typically associated with healthy physiological responses to labor.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Severe Decelerations (DS)</strong></td>
+                                <td>Deep FHR Drops</td>
+                                <td>Decelerations dropping more than 45 bpm below baseline. Critical indicators of acute distress.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prolonged Decelerations (DP)</strong></td>
+                                <td>Lengthy FHR Drops</td>
+                                <td>Decelerations lasting &gt;2 minutes. Significant risk factor for fetal hypoxia and acidemia.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>UC Rate</strong></td>
+                                <td>Uterine Activity</td>
+                                <td>Monitored as frequency per 10 minutes. Identifies tachysystole which can lead to fetal stress.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
