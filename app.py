@@ -712,7 +712,7 @@ with tab_analysis:
                                 st.markdown(f"""
                                 <div class="result-suspect">
                                     <div class="result-label" style="color:#f59e0b;">Network Decision</div>
-                                    <div class="result-value" style="color:#f59e0b;">⚠️ Suspect</div>
+                                    <div class="result-value" style="color:#f59e0b;">🚨 Abnormal</div>
                                     <div class="result-conf">Prediction Confidence: {confidence:.1%}</div>
                                 </div>""", unsafe_allow_html=True)
                             else:
