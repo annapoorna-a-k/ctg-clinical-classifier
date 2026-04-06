@@ -83,6 +83,38 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+/* ─── Heartbeat Animations ─── */
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.25); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.25); }
+    70% { transform: scale(1); }
+    100% { transform: scale(1); }
+}
+.heart-icon {
+    display: inline-block;
+    animation: heartbeat 1.5s infinite;
+    transform-origin: center;
+}
+
+/* ─── Glowing Pulse for Diagnostics ─── */
+@keyframes pulseGlowRed {
+    0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.7); border-color: rgba(239, 68, 68, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+}
+@keyframes pulseGlowGreen {
+    0% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.5); }
+    100% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
+}
+@keyframes pulseGlowAmber {
+    0% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.6); }
+    100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+}
+
 /* ─── Info cards ─── */
 .info-grid {
     display: grid;
@@ -200,16 +232,19 @@ h1, h2, h3, h4, h5, h6 {
     background: linear-gradient(135deg, rgba(22,163,74,0.12) 0%, rgba(30,41,59,0.9) 100%);
     border: 1px solid rgba(34,197,94,0.3);
     border-left: 5px solid #22c55e;
+    animation: pulseGlowGreen 3s infinite;
 }
 .result-abnormal {
     background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(30,41,59,0.9) 100%);
     border: 1px solid rgba(239,68,68,0.3);
     border-left: 5px solid #ef4444;
+    animation: pulseGlowRed 2s infinite;
 }
 .result-suspect {
     background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(30,41,59,0.9) 100%);
     border: 1px solid rgba(245,158,11,0.3);
     border-left: 5px solid #f59e0b;
+    animation: pulseGlowAmber 2.5s infinite;
 }
 .result-label {
     font-size: 0.8rem;
@@ -445,7 +480,7 @@ hr {
 # ─── Header ──────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="header-band">
-    <h1>🫀 CTG Clinical Analysis System</h1>
+    <h1><span class="heart-icon">🫀</span> CTG Clinical Analysis System</h1>
     <div class="subtitle">Cardiotocography &nbsp;·&nbsp; AI-Assisted Fetal Monitoring &nbsp;·&nbsp; Clinical Decision Support</div>
 </div>
 """, unsafe_allow_html=True)
