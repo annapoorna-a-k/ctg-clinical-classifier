@@ -824,30 +824,16 @@ with tab_research:
     </div>
     """, unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""
-        <div class="research-card research-card-amber" style="height: 100%;">
-            <h3>⚠️ The Clinical Gap</h3>
-            <p>Existing automated CTG tools are largely rule-based systems applying static FIGO thresholds. 
-            While useful, they fail to model the <strong>temporal context</strong> of a deceleration — 
-            whether it occurs before, during, or after a contraction fundamentally changes its clinical significance.</p>
-            <p>A purely rule-based classifier cannot learn this contextual dependency. Only a model trained on 
-            longitudinal data with sufficient depth can distinguish benign from pathological patterns reliably.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("""
-        <div class="research-card research-card-purple" style="height: 100%;">
-            <h3>🏥 Industry Relevance</h3>
-            <p>Perinatal complications from undetected hypoxia result in significant healthcare costs, 
-            medicolegal liability, and — most critically — preventable neonatal mortality and morbidity 
-            including cerebral palsy and hypoxic-ischaemic encephalopathy (HIE).</p>
-            <p>An AI-driven decision support tool that provides a consistent, explainable second opinion 
-            has clear commercial, clinical, and humanitarian value in any maternity care setting globally.</p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="research-card research-card-purple">
+        <h3>🏥 Industry Relevance</h3>
+        <p>Perinatal complications from undetected hypoxia result in significant healthcare costs, 
+        medicolegal liability, and — most critically — preventable neonatal mortality and morbidity 
+        including cerebral palsy and hypoxic-ischaemic encephalopathy (HIE).</p>
+        <p>An AI-driven decision support tool that provides a consistent, explainable second opinion 
+        has clear commercial, clinical, and humanitarian value in any maternity care setting globally.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown('<hr>', unsafe_allow_html=True)
     st.markdown(
